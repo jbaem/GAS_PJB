@@ -9,6 +9,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AS/PlayerAttributeSet.h"
+
 AMainCharacter::AMainCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,12 +32,24 @@ AMainCharacter::AMainCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	PlayerAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
+	
 }
 
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FOnGameplayAttributeValueChange& OnManaChange =
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetManaAttribute());
+	OnManaChange.AddUObject(this, &AMainCharacter::OnManaChanged);
+
+	FOnGameplayAttributeValueChange& OnMaxManaChange =
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetMaxManaAttribute());
+	OnMaxManaChange.AddUObject(this, &AMainCharacter::OnMaxManaChanged);
+
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -46,12 +62,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UEnhancedInputComponent* EnhancedInputComp = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComp->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::OnMove);
-		EnhancedInputComp->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::OnLook);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::OnMove);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::OnLook);
 		
-		EnhancedInputComp->BindAction(Ability1Action, ETriggerEvent::Started, this, &AMainCharacter::OnAbility1Pressed);
+		EnhancedInputComponent->BindAction(Ability1Action, ETriggerEvent::Started, this, &AMainCharacter::OnAbility1Pressed);
 	}
 }
 
@@ -99,3 +115,10 @@ void AMainCharacter::OnAbility1Pressed()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Ability 1 Pressed"));
 }
+
+void AMainCharacter::OnMaxManaChanged(const FOnAttributeChangeData& Data)
+{}
+
+void AMainCharacter::OnManaChanged(const FOnAttributeChangeData & Data)
+{}
+

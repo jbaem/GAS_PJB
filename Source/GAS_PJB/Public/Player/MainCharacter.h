@@ -2,11 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 
 #include "MainCharacter.generated.h"
 
 UCLASS()
-class GAS_PJB_API AMainCharacter : public ACharacter
+class GAS_PJB_API AMainCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -20,6 +22,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Main|Character")
 	void DoMove(float Right, float Forward);
@@ -31,17 +35,27 @@ protected:
 	void OnLook(const struct FInputActionValue& Value);
 	void OnAbility1Pressed();
 
+	void OnMaxManaChanged(const FOnAttributeChangeData& Data);
+	void OnManaChanged(const FOnAttributeChangeData& Data);
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Main|Camera")
-	TObjectPtr<class USpringArmComponent> CameraBoom;
+	TObjectPtr<class USpringArmComponent> CameraBoom = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Main|Camera")
-	TObjectPtr<class UCameraComponent> FollowCamera;
+	TObjectPtr<class UCameraComponent> FollowCamera = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Input")
-	TObjectPtr<class UInputAction> MoveAction;
+	TObjectPtr<class UInputAction> MoveAction = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Input")
-	TObjectPtr<class UInputAction> LookAction;
+	TObjectPtr<class UInputAction> LookAction = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main|Input")
-	TObjectPtr<class UInputAction> Ability1Action;
+	TObjectPtr<class UInputAction> Ability1Action = nullptr;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Main|GAS")
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Main|GAS")
+	TObjectPtr<class UPlayerAttributeSet> PlayerAttributeSet = nullptr;
 
 };
