@@ -22,7 +22,19 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 }
 
 void UPlayerAttributeSet::PostAttributeChange(const FGameplayAttribute & Attribute, float OldValue, float NewValue)
-{}
+{
+	if (Attribute == GetMaxManaAttribute())
+	{
+		if (OldValue < NewValue)
+		{
+			SetMana(GetMana() + (NewValue - OldValue));
+		}
+		else
+		{
+			SetMana(FMath::Min(GetMana(), NewValue));
+		}
+	}
+}
 
 void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData & Data)
 {}

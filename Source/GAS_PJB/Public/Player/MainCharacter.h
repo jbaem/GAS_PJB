@@ -7,6 +7,8 @@
 
 #include "MainCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnManaChangedDelegate, float, Current, float, Max);
+
 UCLASS()
 class GAS_PJB_API AMainCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -23,6 +25,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
+	FOnManaChangedDelegate OnManaChangedDelegate;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Main|Character")

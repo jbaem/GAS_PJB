@@ -50,6 +50,10 @@ void AMainCharacter::BeginPlay()
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetMaxManaAttribute());
 	OnMaxManaChange.AddUObject(this, &AMainCharacter::OnMaxManaChanged);
 
+	if (PlayerAttributeSet)
+	{
+		OnManaChangedDelegate.Broadcast(PlayerAttributeSet->GetMana(), PlayerAttributeSet->GetMaxMana());
+	}
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -117,8 +121,12 @@ void AMainCharacter::OnAbility1Pressed()
 }
 
 void AMainCharacter::OnMaxManaChanged(const FOnAttributeChangeData& Data)
-{}
+{
+	OnManaChangedDelegate.Broadcast(Data.NewValue, PlayerAttributeSet->GetMaxMana());
+}
 
 void AMainCharacter::OnManaChanged(const FOnAttributeChangeData & Data)
-{}
+{
+	OnManaChangedDelegate.Broadcast(PlayerAttributeSet->GetMana(), Data.NewValue);
+}
 
