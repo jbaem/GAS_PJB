@@ -26,7 +26,7 @@ public:
 protected:
 	void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
 	void OnHealthChanged(const FOnAttributeChangeData& Data);
-
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Main")
 	TObjectPtr<class UWidgetComponent> BarWidget = nullptr;

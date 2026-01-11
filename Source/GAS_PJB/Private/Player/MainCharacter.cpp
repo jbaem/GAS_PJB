@@ -12,6 +12,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AS/PlayerAttributeSet.h"
+#include "GAS/GASEnums.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -45,6 +46,11 @@ void AMainCharacter::BeginPlay()
 	if(AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+		if (FireBallClass)
+		{
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(FireBallClass, 1, static_cast<int32>(EAbilityInputID::FIREBALL), this));
+		}
 	}
 
 	FOnGameplayAttributeValueChange& OnManaChange =
@@ -122,16 +128,19 @@ void AMainCharacter::OnLook(const FInputActionValue & Value)
 
 void AMainCharacter::OnAbility1Pressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Ability 1 Pressed"));
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::FIREBALL));
+	}
 }
 
 void AMainCharacter::OnMaxManaChanged(const FOnAttributeChangeData& Data)
 {
-	OnManaChangedDelegate.Broadcast(Data.NewValue, PlayerAttributeSet->GetMaxMana());
+	OnManaChangedDelegate.Broadcast(PlayerAttributeSet->GetMana(), PlayerAttributeSet->GetMaxMana());
 }
 
 void AMainCharacter::OnManaChanged(const FOnAttributeChangeData & Data)
 {
-	OnManaChangedDelegate.Broadcast(PlayerAttributeSet->GetMana(), Data.NewValue);
+	OnManaChangedDelegate.Broadcast(PlayerAttributeSet->GetMana(), PlayerAttributeSet->GetMaxMana());
 }
 

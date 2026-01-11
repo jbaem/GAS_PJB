@@ -60,4 +60,3 @@ void AMainEnemy::OnHealthChanged(const FOnAttributeChangeData & Data)
 {
 	IResourceBar::Execute_UpdateAll(BarWidget->GetWidget(), EnemyAttributeSet->GetHealth(), EnemyAttributeSet->GetMaxHealth());
 }
-

@@ -61,4 +61,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Main|GAS")
 	TObjectPtr<class UPlayerAttributeSet> PlayerAttributeSet = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Main|GAS")
+	TSubclassOf<class UGameplayAbility> FireBallClass;
 };
