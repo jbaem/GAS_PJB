@@ -23,6 +23,8 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 
 void UPlayerAttributeSet::PostAttributeChange(const FGameplayAttribute & Attribute, float OldValue, float NewValue)
 {
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
 	if (Attribute == GetMaxManaAttribute())
 	{
 		if (OldValue < NewValue)
@@ -37,4 +39,6 @@ void UPlayerAttributeSet::PostAttributeChange(const FGameplayAttribute & Attribu
 }
 
 void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData & Data)
-{}
+{
+	Super::PostGameplayEffectExecute(Data);
+}

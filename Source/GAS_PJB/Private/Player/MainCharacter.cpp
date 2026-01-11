@@ -42,6 +42,11 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	}
+
 	FOnGameplayAttributeValueChange& OnManaChange =
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetManaAttribute());
 	OnManaChange.AddUObject(this, &AMainCharacter::OnManaChanged);
