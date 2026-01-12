@@ -6,7 +6,7 @@
 
 ADebuffBurnCueActor::ADebuffBurnCueActor()
 {
-	GameplayCueTag = FGameplayTag::RequestGameplayTag(FName("GameplayCue.Debuff.Burn"));
+	//GameplayCueTag = FGameplayTag::RequestGameplayTag(FName("GameplayCue.Debuff.Burn"));
 	bAutoDestroyOnRemove = true;
 }
 
